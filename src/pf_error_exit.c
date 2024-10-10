@@ -22,8 +22,9 @@ void pf_error_exit(enum e_ErrCode err, const char *filename, char *data, int lin
         write(1, "usage: ./pathfinder [filename]\n", 31);
         break;
     case ENoFile:
+        write(1, "error: file ", 12);
         pf_print(filename, false);
-        write(1, ": No such file or directory\n", 28);
+        write(1, " does not exist\n", 16);
         break;
     case EFileEmpty:
         write(1, "error: file ", 12);
