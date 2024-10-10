@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
     char *i_count = extract_until_delim(&ptr, &remaining_len, '\n');
     islands_count = pf_atoi(i_count);
     if (errno == 69) pf_error_exit(EInvalIslandCount, NULL, str, line_counter, 0, NULL);
-    if (errno == 69) pf_error_exit(EInvalLine, NULL, str, line_counter, 0, NULL);
+    if (errno == 420) pf_error_exit(EInvalLine, NULL, str, line_counter, 0, NULL);
     if (islands_count <= 0) pf_error_exit(EInvalLine, NULL, str, line_counter, 0, NULL);
 
     char *islands[islands_count];
