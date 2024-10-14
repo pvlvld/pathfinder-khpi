@@ -123,13 +123,14 @@ static inline char *pf_parse_filename(int argc, char *argv[]) {
     return argv[1];
 }
 
-static inline int push_island_name(int size, char *islands[size], char *name) {
+static inline int push_island_name(int size, char *islands[size], char *name, int *unique_islands) {
     for (int i = 0; i < size; i++) {
         if (islands[i] && mx_strcmp(islands[i], name) == 0) { return i; }
     }
     for (int i = 0; i < size; i++) {
         if (!islands[i]) {
             islands[i] = name;
+            *unique_islands += 1;
             return i;
         }
     }
@@ -198,6 +199,7 @@ int main(int argc, char *argv[]) {
     int islands_count = 0;
     int line_counter = 1;
     size_t total_cost = 0;
+    int unique_islands = 0;
     char *str = pf_file_to_str(pf_parse_filename(argc, argv), &len);
 
     char *ptr = str;
@@ -233,8 +235,8 @@ int main(int argc, char *argv[]) {
             remaining_len = 0;
         };
 
-        int i1_idx = push_island_name(islands_count, islands, island1);
-        int i2_idx = push_island_name(islands_count, islands, island2);
+        int i1_idx = push_island_name(islands_count, islands, island1, &unique_islands);
+        int i2_idx = push_island_name(islands_count, islands, island2, &unique_islands);
         if (i2_idx == -1 || i1_idx == -1)
             pf_error_exit(EInvalIslandCount, NULL, str, line_counter, islands_count, NULL);
         short path_cost_status = push_path_cost(islands_count, cost_matrix, i1_idx, i2_idx, cost_s, &total_cost);
@@ -244,6 +246,7 @@ int main(int argc, char *argv[]) {
         if (remaining_len <= 0) break;
     }
 
+    if (unique_islands != islands_count) pf_error_exit(EInvalIslandCount, NULL, str, 0, islands_count, NULL);
     find_all_pairs_shortest_paths(islands_count, cost_matrix, all_paths);
     print_all_paths(islands_count, islands, cost_matrix, all_paths);
 
