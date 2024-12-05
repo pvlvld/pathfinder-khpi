@@ -2,21 +2,25 @@
 
 char *pf_itoa_10(int value, char *buffer) {
     int i = 0;
-    bool is_negative = false;
 
     if (value < 0) {
-        is_negative = true;
+        buffer[i++] = '-';
         value = -value;
     }
 
+    int temp_value = value;
+    int length = 0;
     do {
-        buffer[i++] = "0123456789"[value % 10];
+        ++length;
+        temp_value /= 10;
+    } while (temp_value > 0);
+
+    buffer[i + length] = '\0';
+    while (length > 0) {
+        buffer[i + length - 1] = "0123456789"[value % 10];
         value /= 10;
-    } while (value > 0);
-
-    if (is_negative) buffer[i++] = '-';
-
-    buffer[i] = '\0';
+        --length;
+    }
 
     return buffer;
 }
